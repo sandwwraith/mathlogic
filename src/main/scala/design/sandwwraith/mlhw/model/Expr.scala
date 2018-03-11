@@ -1,6 +1,8 @@
 package design.sandwwraith.mlhw.model
 
-abstract sealed class Expr(val symbol: String)
+abstract sealed class Expr(val symbol: String) {
+  def ->:(other: Expr) = ->(other, this)
+}
 
 abstract sealed class BinaryExpr(val left: Expr, val right: Expr, symbol: String) extends Expr(symbol) {
   override def toString: String = s"($left $symbol $right)"
@@ -28,9 +30,5 @@ object ExprTypes {
   type Disj = :|
   type Conj = :&
   type Neg = :!
-
-  implicit def String(s: String): Term = Term(s)
-
-  implicit def toExpr(s: String): Expr = Term(s)
 }
 

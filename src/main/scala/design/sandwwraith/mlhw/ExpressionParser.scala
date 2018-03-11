@@ -4,6 +4,14 @@ import design.sandwwraith.mlhw.model._
 import org.parboiled2._
 
 class ExpressionParser(val input: ParserInput) extends Parser {
+
+  def lineWithContext: Rule1[(Seq[Expr], Expr)] = rule {
+    ((zeroOrMore(expression).separatedBy(",") ~> ((a: Seq[Expr]) => a.toList)) ~
+      "|-" ~
+      expression) ~> ((a: List[Expr], b: Expr) => (a, b)) ~
+      EOI
+  }
+
   def inputLine = rule {
     expression ~ EOI
   }

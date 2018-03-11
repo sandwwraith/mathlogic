@@ -36,4 +36,8 @@ object Results {
   case class WrongProofFromLine(lineNumber: Int, msg:String = "") extends ProofFailure {
     override lazy val toString = s"Доказательство неверно со строки $lineNumber${if (msg != "") " (" + msg + ")"}"
   }
+
+  case class ErrorMessage(message: String) extends ProofFailure {
+    override def toString: String = message
+  }
 }
