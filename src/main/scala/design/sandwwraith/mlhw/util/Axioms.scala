@@ -1,10 +1,9 @@
-package design.sandwwraith.mlhw
+package design.sandwwraith.mlhw.util
 
 import design.sandwwraith.mlhw.model.Results._
-import design.sandwwraith.mlhw.model.ExprTypes._
 import design.sandwwraith.mlhw.model._
 
-object Util {
+object Axioms {
   def axiomNumber(expr: Expr, line: Int): Either[ProofFailure, Option[Axiom]] = expr match {
     case a -> (_ -> b) if a == b => Right(Some(Axiom(1)))
     case (a -> b) -> ((c -> (d -> e)) -> (f -> g)) if a == c && b == d && a == f && e == g => Right(Some(Axiom(2)))

@@ -1,5 +1,6 @@
 package design.sandwwraith.mlhw.model
 
+import design.sandwwraith.mlhw.model.ExprTypes.EvalContext
 import org.parboiled2.{ParseError, Parser}
 
 import scala.collection.mutable.MutableList
@@ -26,6 +27,10 @@ object Results {
   }
 
   trait ProofFailure
+
+  case class NotTrue(values: EvalContext) extends ProofFailure {
+    override lazy val toString: String = "Высказывание ложно при " + values.map(e => s"${e._1}=${if (e._2) "И" else "Л"}").mkString(",")
+  }
 
   case class ParsingException(exception: Throwable, parser: Parser = null) extends ProofFailure {
     private val detailedError: String = if (parser != null && exception.isInstanceOf[ParseError]) exception.asInstanceOf[ParseError].format(parser) else null

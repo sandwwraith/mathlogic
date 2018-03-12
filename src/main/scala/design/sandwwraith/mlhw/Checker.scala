@@ -1,10 +1,14 @@
 package design.sandwwraith.mlhw
 
 import design.sandwwraith.mlhw.model.Results._
-import design.sandwwraith.mlhw.model.ExprTypes._
 import design.sandwwraith.mlhw.model._
+import design.sandwwraith.mlhw.util.Axioms
 
 import scala.collection.{mutable => m}
+
+object Checker {
+  def apply(proof: Seq[Expr], context: Seq[Expr] = List.empty): Either[ProofFailure, Proof] = new Checker().apply(proof, context)
+}
 
 class Checker {
   private val reversedImplications = new m.HashMap[Expr, m.Set[(Expr, Int)]]() with m.MultiMap[Expr, (Expr, Int)]
@@ -17,7 +21,7 @@ class Checker {
         case a -> b => reversedImplications.addBinding(b, (a, curLine))
         case _ =>
       }
-      Util.axiomNumber(expr, curLine) match {
+      Axioms.axiomNumber(expr, curLine) match {
         case Left(r) => return Left(r)
         case Right(Some(axiom)) => compiledProof += Statement(curLine, expr, axiom)
         case _ if context.contains(expr) => compiledProof += Statement(curLine, expr, Assumption())

@@ -1,7 +1,6 @@
 package design.sandwwraith.mlhw
 
 import design.sandwwraith.mlhw.Deducer.DeductionResult
-import design.sandwwraith.mlhw.model._
 import design.sandwwraith.mlhw.model.Expr
 import design.sandwwraith.mlhw.model.Results._
 
@@ -10,7 +9,8 @@ import scala.collection.mutable
 object Deducer {
   type DeductionResult = (Seq[Expr], Expr, Seq[Expr])
 
-  def apply: Deducer = new Deducer()
+  def apply(proof: Seq[Expr], beta: Expr, context: Seq[Expr] = List.empty): Either[ProofFailure, DeductionResult]
+    = new Deducer().apply(proof, beta, context)
 }
 
 class Deducer {
