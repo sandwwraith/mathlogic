@@ -26,10 +26,34 @@ object Results {
     override lazy val toString = "M.P. " + first.line + ", " + second.line
   }
 
+  case class InferFA(lineNumber: Int) extends Annotation {
+    override lazy val toString = "Правило для квантора всеобщности в строке " + lineNumber
+  }
+
+  case class InferEX(lineNumber: Int) extends Annotation {
+    override lazy val toString = "Правило для квантора существования в строке " + lineNumber
+  }
+
   trait ProofFailure
 
   case class NotTrue(values: EvalContext) extends ProofFailure {
     override lazy val toString: String = "Высказывание ложно при " + values.map(e => s"${e._1}=${if (e._2) "И" else "Л"}").mkString(",")
+  }
+
+  case class NotFreeForSubstitution(t: Expr, x: Term, e: Expr, line: Int) extends ProofFailure {
+    override def toString = "В строке " + line + " терм " + t + " не свободен для подстановки вместо терма " + x + " в формулу " + e
+  }
+
+  case class EntersFreely(x: Term, e: Expr, line: Int) extends ProofFailure {
+    override def toString = "В строке " + line + " переменная " + x + " входит свободно в формулу " + e
+  }
+
+  case class InferenceRuleOnFreeVar(t: Term, e: Expr, line: Int) extends ProofFailure {
+    override def toString = "В строке " + line + " используется правило вывода по переменной '" + t + "' входящей свободно в предположение " + e
+  }
+
+  case class ProofError(msg: String = "") extends Annotation {
+    override lazy val toString = "Не доказано" + (if (msg != null && msg != "") ": " + msg else "")
   }
 
   case class ParsingException(exception: Throwable, parser: Parser = null) extends ProofFailure {

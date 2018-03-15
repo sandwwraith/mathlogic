@@ -2,7 +2,8 @@ package design.sandwwraith.mlhw
 
 import design.sandwwraith.mlhw.Deducer.DeductionResult
 import design.sandwwraith.mlhw.Runner.parse
-import design.sandwwraith.mlhw.model.Expr
+import design.sandwwraith.mlhw.Task2.deduceProof
+import design.sandwwraith.mlhw.model.{Expr, Term}
 import design.sandwwraith.mlhw.model.Results._
 
 import scala.io.Source
@@ -25,7 +26,7 @@ object Runner {
   }
 
   def runMethod[R](folder: String)
-                  (method: (Source) => Either[ProofFailure, R], formatter: (R) => String, checker: => (R) => String)
+                  (method: (Source) => Either[ProofFailure, R], formatter: => (R) => String, checker: => (R) => String)
                   (implicit args: Array[String]) : Unit = {
     getSource(folder).map((s: Source) => method(s) match {
       case Left(failure) => failure.toString
@@ -56,10 +57,8 @@ object Task1 extends App {
   Runner.runMethod("HW1")(runProof(new Checker()), (r: Proof) => r.mkString("\n"), throw new RuntimeException("already checked"))
 }
 
-object Task2 extends App {
-  override implicit val args: Array[String] = super.args
-
-  private def deduceProof(deducer: Deducer)(s: Source): Either[ProofFailure, DeductionResult] = {
+trait Deducable {
+  def deduceProof(deducer: Deducer)(s: Source): Either[ProofFailure, DeductionResult] = {
     val lines = s.getLines() filterNot (_.trim.isEmpty)
     if (lines.isEmpty) return Left(ErrorMessage("Пустой заголовок недопустим"))
     val parser = new ExpressionParser(lines.next().replaceAll(" ", ""))
@@ -70,8 +69,21 @@ object Task2 extends App {
     if (ctx.isEmpty) return Left(ErrorMessage("Отсутствует альфа"))
     parse(lines).flatMap(deducer(_, beta, ctx))
   }
+}
+
+object Task2 extends App with Deducable {
+  override implicit val args: Array[String] = super.args
 
   Runner.runMethod("HW2")(deduceProof(new Deducer()),
+    (p: DeductionResult) => p._1.mkString(", ") + "|-" + p._2.toString + "\n" + p._3.mkString("\n"),
+    (p: DeductionResult) => {val (ctx, beta, proof) = p; ctx.mkString(", ") + "|-" + beta.toString + "\n" + Checker(proof, ctx).right.get.mkString("\n") }
+  )
+}
+
+object Task4 extends App with Deducable {
+  override implicit val args: Array[String] = super.args
+
+  Runner.runMethod("HW4")(deduceProof(new Deducer()),
     (p: DeductionResult) => p._1.mkString(", ") + "|-" + p._2.toString + "\n" + p._3.mkString("\n"),
     (p: DeductionResult) => {val (ctx, beta, proof) = p; ctx.mkString(", ") + "|-" + beta.toString + "\n" + Checker(proof, ctx).right.get.mkString("\n") }
   )

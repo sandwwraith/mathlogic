@@ -12,10 +12,19 @@ class ParserSpec extends FlatSpec with Matchers {
     parser.inputLine.run().toEither.left.map(ParsingException(_, parser))
   }
 
+  private def mustBeParsed(result: Either[ParsingException, Expr]) = result match {
+    case Right(_) =>
+    case Left(f) => assert(false, s"Parser must completed normally, but emitted error: $f")
+  }
+
   "Expression parser" should "parse a&b->c" in {
     parse("A&B->C") match {
       case Right(_) => assert(true)
       case Left(f) => assert(false, s"Parser must completed normally, but emitted error: $f")
     }
+  }
+
+  "Expression parser with digits and predicates" should "parse @a(a+0'=a)" in {
+    mustBeParsed(parse("@a(a+0'=a)"))
   }
 }
