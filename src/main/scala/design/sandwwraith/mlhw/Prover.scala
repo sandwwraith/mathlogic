@@ -16,7 +16,7 @@ class Prover {
     }
   }
 
-  def whenFalse(expr: Expr): Option[EvalContext] = createVarsToBoolList(expr.vars).find(!expr.eval(_))
+  private def whenFalse(expr: Expr): Option[EvalContext] = createVarsToBoolList(expr.vars).find(!expr.eval(_))
 
   private def gen(i: Int): List[List[Boolean]] = i match {
     case 0 => List()
@@ -36,7 +36,7 @@ class Prover {
     true
   }
 
-  def makeNotAnnotatedProof(expr: Expr): List[Expr] = {
+  private def makeNotAnnotatedProof(expr: Expr): List[Expr] = {
     val curVarsList = expr.vars
     var curVars = m.HashSet[String]() ++ curVarsList
     var proofs = createVarsToBoolList(curVarsList)
@@ -49,7 +49,7 @@ class Prover {
     proofs.head._2
   }
 
-  def removeAssumption(vars: m.HashSet[String], proofs: Map[EvalContext, List[Expr]],
+  private def removeAssumption(vars: m.HashSet[String], proofs: Map[EvalContext, List[Expr]],
                        beta: Expr): (m.HashSet[String], Map[EvalContext, List[Expr]]) = {
     val smallerVars = vars.init
     val smallerEvalContextList = createVarsToBoolList(smallerVars.toList)
@@ -104,7 +104,7 @@ class Prover {
   }
 
 
-  def mergeProofs(firstDeduceContext: Seq[Expr], secondDeduceContext: Seq[Expr], varToRemove: Term, beta: Expr,
+  private def mergeProofs(firstDeduceContext: Seq[Expr], secondDeduceContext: Seq[Expr], varToRemove: Term, beta: Expr,
                   firstProof: List[Expr], secondProof: List[Expr]): List[Expr] = {
     var newProof = List[Expr]()
     val deduced0 = Deducer(firstProof, firstProof.last, firstDeduceContext) match {

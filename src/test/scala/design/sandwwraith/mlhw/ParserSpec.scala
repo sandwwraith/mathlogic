@@ -1,17 +1,21 @@
 package design.sandwwraith.mlhw
 
+import design.sandwwraith.mlhw.model.Results.ParsingException
 import design.sandwwraith.mlhw.model._
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Success
 
 class ParserSpec extends FlatSpec with Matchers {
-  private def parse(s: String) = new ExpressionParser(s.replaceAll(" ", "")).inputLine.run()
+  private def parse(s: String): Either[ParsingException, Expr] = {
+    val parser = new ExpressionParser(s.replaceAll(" ", ""))
+    parser.inputLine.run().toEither.left.map(ParsingException(_, parser))
+  }
 
   "Expression parser" should "parse a&b->c" in {
-    parse("a&b->c") match {
-      case Success((Term("a") :& Term("b")) -> Term("c")) => assert(true)
-      case _ => assert(false, "Did not match")
+    parse("A&B->C") match {
+      case Right(_) => assert(true)
+      case Left(f) => assert(false, s"Parser must completed normally, but emitted error: $f")
     }
   }
 }

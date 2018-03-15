@@ -2,7 +2,6 @@ package design.sandwwraith.mlhw
 
 import design.sandwwraith.mlhw.Deducer.DeductionResult
 import design.sandwwraith.mlhw.Runner.parse
-import design.sandwwraith.mlhw.Task2.args
 import design.sandwwraith.mlhw.model.Expr
 import design.sandwwraith.mlhw.model.Results._
 
