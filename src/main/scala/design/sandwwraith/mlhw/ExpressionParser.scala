@@ -43,17 +43,19 @@ class ExpressionParser(val input: ParserInput) extends Parser {
         | variable
         | ("(" ~ term ~ ")")
         | (str("0") ~> (() => Term("0")))) ~
-        zeroOrMore(capture("'")) ~> ((a: Term, b: Seq[_]) => wrapInQuote(a, b.length)) }
+        zeroOrMore(capture("'")) ~> ((a: Term, b: Seq[_]) => ExpressionParser.wrapInQuote(a, b.length)) }
 
   private def leftAssoc[A](a: => Rule1[A], b: (A, A) => A, divider: String): Rule1[A]
   = rule { a ~ zeroOrMore(divider ~ a ~> b) }
-
-  private def wrapInQuote(e: Term, n: Int): Term = {
-    if (n < 1) e else wrapInQuote(Term("'", List(e)), n - 1)
-  }
 
   private def negation: Rule1[Expr] = rule { "!" ~ unary ~> :! }
   private def variable: Rule1[Term] = rule { capture(letters) ~> ((a: String) => Term(a)) }
   private def letters: Rule0 = rule { oneOrMore(CharPredicate.LowerAlpha) ~ zeroOrMore(CharPredicate.Digit) }
   private def parens: Rule1[Expr] = rule { "(" ~ expression ~ ")" }
+}
+
+object ExpressionParser {
+  def wrapInQuote(e: Term, n: Int): Term = {
+    if (n < 1) e else wrapInQuote(Term("'", List(e)), n - 1)
+  }
 }

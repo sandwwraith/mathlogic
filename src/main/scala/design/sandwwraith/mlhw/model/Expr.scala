@@ -198,6 +198,9 @@ case class Term(content: String, args: Seq[Term] = List.empty) extends Expr(cont
   def eval(implicit ctx: EvalContext): Boolean = if (args.isEmpty) ctx(content) else throw new UnsupportedOperationException("Not a variable")
 
   override def toString: String = stringifyExprWithArgs(args)
+
+  def :=(other: Term): Expr = Predicate("=", Seq(this, other))
+  def :+(other: Term): Term = Term("+", Seq(this, other))
 }
 
 
@@ -208,5 +211,7 @@ object ExprTypes {
   type Neg = :!
 
   type EvalContext = Map[String, Boolean]
+
+  implicit def toTerm(s: String) = Term(s)
 }
 

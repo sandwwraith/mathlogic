@@ -3,6 +3,7 @@ package design.sandwwraith.mlhw
 import design.sandwwraith.mlhw.Deducer.DeductionResult
 import design.sandwwraith.mlhw.Runner.parse
 import design.sandwwraith.mlhw.Task2.deduceProof
+import design.sandwwraith.mlhw.util.Proofs2
 import design.sandwwraith.mlhw.model.{Expr, Term}
 import design.sandwwraith.mlhw.model.Results._
 
@@ -43,7 +44,7 @@ object Task1 extends App {
 
   override implicit val args: Array[String] = super.args
 
-  private def runProof(prover: Checker)(s: Source): Either[ProofFailure, Proof] = {
+  def runProof(prover: Checker)(s: Source): Either[ProofFailure, Proof] = {
     val lines: Seq[String] = s getLines() filterNot (_.trim.isEmpty) map (_.replaceAll(" ", "")) toSeq;
     if (lines.isEmpty) return Right(new Proof())
     val parser = new ExpressionParser(lines.head)
@@ -104,4 +105,35 @@ object Task3 extends App {
   }
 
   Runner.runMethod("HW3")(makeProof(new Prover()), (p: Seq[Expr]) => p.mkString("\n"), (p: Seq[Expr]) => Checker(p).right.get.mkString("\n"))
+}
+
+object Task5 extends App {
+  def getArgs: Option[(Int, Int)] = {
+    if (args.length < 2) return None
+    Some(args(0).toInt -> args(1).toInt)
+  }
+
+  def prove(in: (Int, Int)): Seq[Expr] = Peano(in._1, in._2)
+
+  def check(proof: Seq[Expr]) = Checker(proof)
+
+  getArgs.map(prove) match {
+    case None => System.err.println(s"No input provided. Input two separate numbers")
+    case Some(proof) =>
+      if (!args.contains("andCheck")) println(proof.mkString("\n"))
+      else check(proof) match {
+        case Left(fail) => System.err.println(s"Proof mismatch!. FAIL: $fail")
+        case Right(proved) => println(proved.mkString("\n"))
+      }
+  }
+
+}
+object Playground extends App {
+  val str = Proofs2.parseUnsafe(Seq("0'''"))
+//  private val str: String = Proofs2.genA0A(Term("c")).reverse.mkString("\n")
+  println(str)
+//  println(Task1.runProof(new Checker())(Source.fromString(str)) match {
+//    case Left(failure) => failure.toString
+//    case Right(r) => r.mkString("\n")
+//  })
 }
