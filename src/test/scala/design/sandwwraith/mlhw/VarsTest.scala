@@ -46,7 +46,7 @@ class VarsTest extends FunSuite with Matchers {
       "(x=x)" -> "(z=z)",
       "P(x)" -> "P(a)",
       "Q(x,y,z)" -> "Q(a,y,z)",
-//      "P(x,x)->?xQ(x)" -> "P(a,a)->?xQ(x)",
+      "P(x,x)->?xQ(x)" -> "P(a,a)->?xQ(x)",
       "P(x,a)" -> "P(a,a)",
       "x&x"->"x&x",
       "x" -> "q->q"

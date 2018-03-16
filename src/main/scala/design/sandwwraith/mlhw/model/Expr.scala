@@ -75,8 +75,8 @@ abstract sealed class Expr(val symbol: String) {
       if (v1 != v2) None else e1.findChanges(x, e2)
     case (EX(v1, e1), EX(v2, e2)) =>
       if (v1 != v2) None else e1.findChanges(x, e2)
-    case (t1@Term(n1, Nil), expr) if t1 == x =>
-      Some(Set(expr))  //TODO: confirm
+    case (t1@Term(n1, Nil), expr) if t1 != other =>
+      Some(Set(expr))
     case (Term(n1, Nil), Term(n2, Nil)) =>
       Some(Set())
     case (Term(n1, args1), Term(n2, args2)) if n1 == n2 =>
