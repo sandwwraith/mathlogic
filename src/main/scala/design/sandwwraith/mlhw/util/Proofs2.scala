@@ -55,7 +55,7 @@ object Proofs2 {
     , "(A&B->B)->@a(a+0=a)"
     , "@a(a+0=a)")).reverse
 
-  def genA0A(a: Term) = Seq((a :+ Zero) := a, FA("a", (Term("a") :+ Zero) := "a") ->: ((a :+ Zero) := a)) ++ baseA0A
+  def genA0A(a: Term) = Seq((a + Zero) := a, FA("a", (Term("a") + Zero) := "a") ->: ((a + Zero) := a)) ++ baseA0A
 
   def genABAB(a: Term, b: Term): Seq[Expr] = {
     parseUnsafe(Seq(

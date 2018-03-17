@@ -86,7 +86,10 @@ object Task4 extends App with Deducable {
 
   Runner.runMethod("HW4")(deduceProof(new Deducer()),
     (p: DeductionResult) => p._1.mkString(", ") + "|-" + p._2.toString + "\n" + p._3.mkString("\n"),
-    (p: DeductionResult) => {val (ctx, beta, proof) = p; ctx.mkString(", ") + "|-" + beta.toString + "\n" + Checker(proof, ctx).right.get.mkString("\n") }
+    (p: DeductionResult) => {val (ctx, beta, proof) = p; ctx.mkString(", ") + "|-" + beta.toString + "\n" + (Checker(proof, ctx) match {
+      case Left(failure) => failure.toString
+      case Right(pf) => pf.mkString("\n")
+    }) }
   )
 }
 
@@ -129,11 +132,7 @@ object Task5 extends App {
 
 }
 object Playground extends App {
-  val str = Proofs2.parseUnsafe(Seq("0'''"))
-//  private val str: String = Proofs2.genA0A(Term("c")).reverse.mkString("\n")
-  println(str)
-//  println(Task1.runProof(new Checker())(Source.fromString(str)) match {
-//    case Left(failure) => failure.toString
-//    case Right(r) => r.mkString("\n")
-//  })
+  val s: Seq[Int] = Stream.from(1).map(_ * 2)
+
+  println(s.take(10).toList)
 }

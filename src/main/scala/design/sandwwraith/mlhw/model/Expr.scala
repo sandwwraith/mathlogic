@@ -200,7 +200,8 @@ case class Term(content: String, args: Seq[Term] = List.empty) extends Expr(cont
   override def toString: String = stringifyExprWithArgs(args)
 
   def :=(other: Term): Expr = Predicate("=", Seq(this, other))
-  def :+(other: Term): Term = Term("+", Seq(this, other))
+  def +(other: Term): Term = Term("+", Seq(this, other))
+  def ++ : Term = Term("'", Seq(this))
 }
 
 
