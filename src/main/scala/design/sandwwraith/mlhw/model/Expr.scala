@@ -20,7 +20,7 @@ abstract sealed class Expr(val symbol: String) {
   protected def stringifyExprWithArgs(args: Seq[Term]): String = {
     val name = symbol
     if (args.lengthCompare(2) == 0 && commonPredicates.contains(name))
-      args(0) + "" + name + "" + args(1)
+      args(0) + " " + name + " " + args(1)
     else if (name == "'") {
       (args(0) match {
         case Term(_, Nil) => args(0)
