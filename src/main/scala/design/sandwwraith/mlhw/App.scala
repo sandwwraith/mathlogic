@@ -131,8 +131,3 @@ object Task5 extends App {
   }
 
 }
-object Playground extends App {
-  val s: Seq[Int] = Stream.from(1).map(_ * 2)
-
-  println(s.take(10).toList)
-}

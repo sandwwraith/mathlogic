@@ -14,7 +14,7 @@ class Checker {
   type Context = Seq[Expr]
 
   private val reversedImplications = new m.HashMap[Expr, m.Set[(Expr, Int)]]() with m.MultiMap[Expr, (Expr, Int)]
-  private var curLine: Int = 0
+  private var curLine: Int = 1
 
   def apply(proof: Seq[Expr], context: Seq[Expr] = List.empty): Either[ProofFailure, Proof] = {
     implicit val compiledProof: Proof = new Proof()
@@ -43,7 +43,7 @@ class Checker {
     for (c <- candidates;
          p <- proof
          if p.expr.equals(c._1)) {
-      return Some(MP(p.line, c._2))
+      return Some(MP(p.line - 1, c._2 - 1))
     }
     None
   }
