@@ -20,7 +20,7 @@ abstract sealed class Expr(val symbol: String) {
   protected def stringifyExprWithArgs(args: Seq[Term]): String = {
     val name = symbol
     if (args.lengthCompare(2) == 0 && commonPredicates.contains(name))
-      args(0) + " " + name + " " + args(1)
+      args(0) + name + args(1)
     else if (name == "'") {
       (args(0) match {
         case Term(_, Nil) => args(0)
@@ -125,7 +125,7 @@ abstract sealed class Expr(val symbol: String) {
 }
 
 abstract sealed class BinaryExpr(val left: Expr, val right: Expr, symbol: String) extends Expr(symbol) {
-  override def toString: String = s"($left $symbol $right)"
+  override def toString: String = s"($left$symbol$right)"
 
   override lazy val vars: List[String] = left.vars ++ right.vars
   override lazy val terms: Seq[Term] = left.terms ++ right.terms

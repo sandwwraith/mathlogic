@@ -41,15 +41,15 @@ object Results {
   }
 
   case class NotFreeForSubstitution(t: Expr, x: Term, e: Expr, line: Int) extends ProofFailure {
-    override def toString = "В строке " + line + " терм " + t + " не свободен для подстановки вместо терма " + x + " в формулу " + e
+   override lazy val toString = "Доказательство неверно со строки №" + line + ": терм " + t + " не свободен для подстановки вместо терма " + x + " в формулу " + e
   }
 
   case class EntersFreely(x: Term, e: Expr, line: Int) extends ProofFailure {
-    override def toString = "В строке " + line + " переменная " + x + " входит свободно в формулу " + e
+   override lazy val toString = "Доказательство неверно со строки №" + line + ": переменная " + x + " входит свободно в формулу " + e
   }
 
   case class InferenceRuleOnFreeVar(t: Term, e: Expr, line: Int) extends ProofFailure {
-    override def toString = "В строке " + line + " используется правило вывода по переменной '" + t + "' входящей свободно в предположение " + e
+   override lazy val toString = "Доказательство неверно со строки №" + line + ": используется правило вывода по переменной '" + t + "' входящей свободно в предположение " + e
   }
 
   case class ProofError(msg: String = "") extends Annotation {
@@ -59,14 +59,14 @@ object Results {
   case class ParsingException(exception: Throwable, parser: Parser = null) extends ProofFailure {
     private val detailedError: String = if (parser != null && exception.isInstanceOf[ParseError]) exception.asInstanceOf[ParseError].format(parser) else null
 
-    override def toString: String = "Входной файл содержит ошибки: " + (if (detailedError != null) detailedError else exception.toString)
+   override lazy val toString: String = "Входной файл содержит ошибки: " + (if (detailedError != null) detailedError else exception.toString)
   }
 
   case class WrongProofFromLine(lineNumber: Int, msg:String = "") extends ProofFailure {
-    override lazy val toString = s"Доказательство неверно со строки $lineNumber${if (msg != "") " (" + msg + ")"}"
+    override lazy val toString = s"Доказательство неверно со строки №$lineNumber${if (msg.nonEmpty) " (" + msg + ")" else ""}"
   }
 
   case class ErrorMessage(message: String) extends ProofFailure {
-    override def toString: String = message
+   override lazy val toString: String = message
   }
 }

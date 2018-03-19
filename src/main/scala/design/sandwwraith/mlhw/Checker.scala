@@ -70,7 +70,7 @@ class Checker {
             Right(InferEX(lineInProof(expr).getOrElse(0)))
           }
         case _ =>
-          Left(WrongProofFromLine(curLine, "Выражение не может быть выведено"))
+          Left(WrongProofFromLine(curLine))
       }
   }
 
